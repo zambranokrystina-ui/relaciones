@@ -448,7 +448,7 @@ $('sigtext').addEventListener('input',function(){ $('sigprev').textContent = thi
 
 function updateAviso(){
   $('aviso').textContent = ENDPOINT
-    ? 'Al firmar, tu carta firmada (nombre, correo y firma) se enviará a '+COACH+'. También podrás descargar tu copia en PDF.'
+    ? 'Al firmar, tu carta firmada (nombre, correo y firma) se enviará a '+COACH+' y recibirás una copia en PDF en tu correo. También podrás descargarla aquí.'
     : 'Al firmar podrás descargar tu copia en PDF. Tu firma no se envía automáticamente: recuerda mandarle el PDF a '+COACH+' por WhatsApp o correo.';
 }
 
@@ -485,6 +485,7 @@ $('firmar').addEventListener('click',function(){
   $('rFecha').textContent = datos.fecha;
   $('rFirma').src = sig;
   construirDocumento(datos);
+  datos.docHtml = $('print-doc').innerHTML;
   go(5);
   btn.disabled = false;
 
@@ -492,7 +493,7 @@ $('firmar').addEventListener('click',function(){
   if(ENDPOINT){
     estado.className = 'estado'; estado.textContent = 'Enviando tu carta firmada…';
     fetch(ENDPOINT,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(datos)})
-      .then(function(){ estado.textContent = '✓ Tu carta firmada fue enviada a '+COACH+'.'; })
+      .then(function(){ estado.textContent = '✓ Tu carta firmada fue enviada a '+COACH+'. En unos minutos recibirás una copia en PDF en '+datos.email+' (revisa también spam).'; })
       .catch(function(){ estado.className = 'estado warn'; estado.textContent = 'No se pudo enviar automáticamente. Descarga tu PDF y envíalo por WhatsApp o correo.'; });
     $('pasoSig').textContent = 'Te recomendamos guardar tu copia en PDF para tus registros.';
   } else {
